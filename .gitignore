@@ -1,0 +1,4 @@
+*.env
+.session_name.session
+.session_monitor.session
+.DS_Store
