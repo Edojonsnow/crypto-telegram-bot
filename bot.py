@@ -92,15 +92,6 @@ def execute_trade(symbol, side, amount):
     except Exception as e:
         print(f"Trade failed: {e}")
 
-# markets = exchange.load_markets()
-
-# exchange.verbose = True  # uncomment for debugging purposes
-
-# params = {'stop_px': 9750, 'base_price': 11152}
-# order = exchange.create_order('BTC/USDT', 'market', 'buy', 911, None, params)
-
-# pprint(order)
-
 
 
 def run_bot():
