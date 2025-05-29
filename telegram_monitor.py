@@ -20,8 +20,8 @@ async def create_telegram_client():
         API_HASH
     )
     
-    @client.on(events.NewMessage(chats=int(os.getenv("TEST_GROUP_ID"))))
-    # @client.on(events.NewMessage(chats=int(os.getenv("GROUP_ID"))))
+    # @client.on(events.NewMessage(chats=int(os.getenv("TEST_GROUP_ID"))))
+    @client.on(events.NewMessage(chats=int(os.getenv("GROUP_ID"))))
     async def handler(event):
         print(f"New message: {event.message.text}")
         # Add your signal processing here

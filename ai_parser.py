@@ -33,7 +33,7 @@ def parse_signal(raw_signal: str) -> dict:
         response = client.models.generate_content(
             model="gemini-2.0-flash",
             config=types.GenerateContentConfig(
-            system_instruction="You are a trading assistant. Extract trading signals from messages.",),
+            system_instruction="You are a trading assistant. Extract trading signals from messages. There will be other messages coming in from the channel that are not trading signals , do your best to ignore them and only parse the necessary messages ",),
             contents=prompt,
 )
         # Extract JSON from Gemini's response
