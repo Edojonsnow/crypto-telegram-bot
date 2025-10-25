@@ -10,7 +10,9 @@ load_dotenv()
 API_ID = int(os.getenv("TELEGRAM_API_ID"))
 API_HASH = os.getenv("TELEGRAM_API_HASH")
 PHONE_NUMBER = os.getenv("PHONE_NUMBER")
-GROUP_ID = int(os.getenv("GROUP_ID"))
+# GROUP_ID = int(os.getenv("GROUP_ID"))
+GROUP_ID = int(os.getenv("TEST_GROUP_ID"))
+
 
 # Initialize client
 async def create_telegram_client():
@@ -19,9 +21,16 @@ async def create_telegram_client():
         int(API_ID),
         API_HASH
     )
+    await client.start(phone=PHONE_NUMBER)
+    
+    
+    group_entity = await client.get_entity(GROUP_ID)
+    if not group_entity:
+        print("Could not find group with id:", GROUP_ID)  
+    print(f"Listening to messages from: {group_entity.title}")
     
     # @client.on(events.NewMessage(chats=int(os.getenv("TEST_GROUP_ID"))))
-    @client.on(events.NewMessage(chats=int(os.getenv("GROUP_ID"))))
+    @client.on(events.NewMessage(chats=GROUP_ID))
     async def handler(event):
         print(f"New message: {event.message.text}")
         # Add your signal processing here
@@ -43,17 +52,14 @@ async def handle_new_message(event):
 
     
 
-async def main():
+async def start_monitor():
     client = await create_telegram_client()
     await client.start(phone=os.getenv("PHONE_NUMBER"))
     print("Telegram monitor started")
     balance = exchange.fetch_balance()
     usdt_balance = balance['USDT']['free']  # Available USDT
-    print(f"Available USDT: {usdt_balance}")
+    print(f"Available USDT: {usdt_balance:.6f}")
     print("Listening for signals...")
     await client.run_until_disconnected()
 
 
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())

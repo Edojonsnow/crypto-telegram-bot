@@ -24,7 +24,7 @@ exchange = ccxt.bybit({
 # Trading parameters
 SYMBOL = "BTC/USDT:USDT"  # Forex CFD example: "EUR/USD" (if available)
 TIMEFRAME = "1h"     # 1-hour candles
-TRADE_AMOUNT = 10   # USD to trade per order
+TRADE_AMOUNT = 7.5   # USD to trade per order
 TAKE_PROFIT = 0.10  # 10% take profit
 STOP_LOSS = 0.01    # 1% stop loss
 
@@ -88,7 +88,6 @@ def execute_trade(symbol, side, amount):
     try:
         print(f"Placing {side} order for {amount} {symbol}")
         order = exchange.create_market_order(symbol, side, amount)
-        print(f"Order executed: {order}")
     except Exception as e:
         print(f"Trade failed: {e}")
 
@@ -106,29 +105,29 @@ def run_bot():
             current_price = get_current_price()
             
             # Manage open position
-            # if position:
-            #     pnl = calculate_pnl(position, current_price)
-            #     print(f"Current PnL: {pnl*100:.2f}%")
+            if position:
+                pnl = calculate_pnl(position, current_price)
+                print(f"Current PnL: {pnl*100:.2f}%")
                 
-            #     # Close position if profit/loss target hit
-            #     if pnl >= TAKE_PROFIT or pnl <= -STOP_LOSS:
-            #         close_position(position)
-            #         continue  # Skip new signals until next cycle
+                # Close position if profit/loss target hit
+                if pnl >= TAKE_PROFIT or pnl <= -STOP_LOSS:
+                    close_position(position)
+                    continue  # Skip new signals until next cycle
             
             # Fetch new data and check signals
-            # ohlcv = exchange.fetch_ohlcv(SYMBOL, TIMEFRAME, limit=100)
-            # df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
-            # df = moving_average_strategy(df)
-            # signal = df['signal'].iloc[-1]
+            ohlcv = exchange.fetch_ohlcv(SYMBOL, TIMEFRAME, limit=100)
+            df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+            df = moving_average_strategy(df)
+            signal = df['signal'].iloc[-1]
             
             # # Execute new trade if no position is open
-            # if not position:
-            #     if signal == 1:
-            #         exchange.create_market_order(SYMBOL, 'buy', TRADE_AMOUNT)
-            #         print("Opened long position")
-            #     elif signal == -1:
-            #         exchange.create_market_order(SYMBOL, 'sell', TRADE_AMOUNT)
-            #         print("Opened short position")
+            if not position:
+                if signal == 1:
+                    exchange.create_market_order(SYMBOL, 'buy', TRADE_AMOUNT)
+                    print("Opened long position")
+                elif signal == -1:
+                    exchange.create_market_order(SYMBOL, 'sell', TRADE_AMOUNT)
+                    print("Opened short position")
             
             time.sleep(60)  # Check every minute
             
