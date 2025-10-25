@@ -3,3 +3,4 @@ python-dotenv
 ccxt
 requests
 google-genai
+pandas

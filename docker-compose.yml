@@ -1,0 +1,11 @@
+version: "3.11"
+
+services:
+  forex-agent:
+    build: .
+    container_name: forex-agent
+    env_file: .env
+    volumes:
+      - ./session:/app/session
+    restart: always
+    command: ["python", "main.py"]
